@@ -62,7 +62,7 @@ module WmiLite
     end
 
     def wmi_result_to_snapshot(wmi_object)
-      snapshot = Instance.wmi_ole_object_to_hash(wmi_object)
+      snapshot = Instance.new(wmi_object)
     end
   end
 end

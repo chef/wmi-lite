@@ -38,7 +38,7 @@ module WmiLite
           property_map[property.name.downcase] = wmi_object.invoke(property.name)
         end
 
-        property_map[:wmi_object] = wmi_object
+        @wmi_ole_object = wmi_object
 
         property_map.freeze
       end
