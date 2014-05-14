@@ -13,10 +13,10 @@ To install it, run:
 
 Usage
 -----
-To use wmi-lite in your Ruby source code, just use a simple `require`:
+To use wmi-lite in your Ruby source code, just `require` it:
 
 ```ruby
-require 'wmi-lite/wmi'
+require 'wmi-lite'
 ```
 
 #### Examples
