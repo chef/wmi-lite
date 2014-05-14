@@ -17,6 +17,7 @@
 #
 
 require 'win32ole' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+require 'wmi-lite/wmi_instance'
 
 module WmiLite
   class Wmi
