@@ -13,16 +13,16 @@ To install it, run:
 
 Usage
 -----
-To use wmi-lite in your Ruby source code, just `require` it:
+To use wmi-lite in your Ruby source code, just use a simple `require`:
 
 ```ruby
-require 'wmi-lite'
+require 'wmi-lite/wmi'
 ```
 
 #### Examples
 ```ruby
 cores = 0
-wmi = WmiRepository.new
+wmi = WmiLite::Wmi.new
 processors = wmi.instances_of('Win32_Processor')
 processors.each do | processor |
   cores += processor['numberofcores']
