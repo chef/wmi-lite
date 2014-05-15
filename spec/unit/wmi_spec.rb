@@ -35,29 +35,24 @@ describe WmiLite::Wmi do
   let(:wbem_connection) { double 'WIN32OLE', :ExecQuery => native_query_result }
 
   def validate_query_result(actual, expected)
-    expected_result = actual.count == expected.count
+    expect(actual.count).to eql(expected.count)
 
     index = 0
-    if expected_result
-      expected.each do | expected_value |
-        actual_value = actual[index]
-        expected_value.wmi_ole_object.invoke == actual_value.wmi_ole_object.invoke
-        expected_value.wmi_ole_object.properties_.each do | expected_property |
-          if actual_value[expected_property.name].nil?
-            expected_result = false
-          end
-          if !! actual_value.wmi_ole_object.properties_.find { | actual_property | actual_property == expected_property.name }
-            expected_result = false
-          end
-          if ! expected_result
-            break
-          end
-        end
-        index += 1
-      end
-    end
 
-    expected_result
+    expected.each do | expected_value |
+      actual_value = actual[index]
+      expected_value.wmi_ole_object.invoke == actual_value.wmi_ole_object.invoke
+      expected_value.wmi_ole_object.properties_.each do | expected_property |
+
+        expect(actual_value[expected_property.name]).not_to eql(nil)
+
+        names = actual_value.wmi_ole_object.properties_.map { | property | property.name }
+
+        expect(names.include?(expected_property.name)).to eql(true)
+
+      end
+      index += 1
+    end
   end
 
   before(:each) do
@@ -94,8 +89,7 @@ describe WmiLite::Wmi do
       it "should get one instance" do
         results = wmi.first_of('vm')
         expected_result = WmiLite::Wmi::Instance.new(native_query_result.first)
-        is_expected = validate_query_result([results], [expected_result])
-        expect(is_expected).to eq(true)
+        validate_query_result([results], [expected_result])
       end
     end
 
@@ -106,8 +100,7 @@ describe WmiLite::Wmi do
       it "should get one instance" do
         results = wmi.first_of('vm')
         expected_result = WmiLite::Wmi::Instance.new(native_query_result.first)
-        is_expected = validate_query_result([results], [expected_result])
-        expect(is_expected).to eq(true)
+        validate_query_result([results], [expected_result])
       end
     end
 
@@ -134,8 +127,7 @@ describe WmiLite::Wmi do
         expected_result = results.map do | result |
           WmiLite::Wmi::Instance.new(result.wmi_ole_object)
         end
-        is_expected = validate_query_result(results, expected_result)
-        expect(is_expected).to eq(true)
+        validate_query_result(results, expected_result)
       end
     end
 
@@ -149,8 +141,7 @@ describe WmiLite::Wmi do
         expected_result = results.map do | result |
           WmiLite::Wmi::Instance.new(result.wmi_ole_object)
         end
-        is_expected = validate_query_result(results, expected_result)
-        expect(is_expected).to eq(true)
+        validate_query_result(results, expected_result)
       end
     end
 
@@ -177,8 +168,7 @@ describe WmiLite::Wmi do
         expected_result = results.map do | result |
           WmiLite::Wmi::Instance.new(result.wmi_ole_object)
         end
-        is_expected = validate_query_result(results, expected_result)
-        expect(is_expected).to eq(true)
+        validate_query_result(results, expected_result)
       end
     end
 
@@ -192,8 +182,7 @@ describe WmiLite::Wmi do
         expected_result = results.map do | result |
           WmiLite::Wmi::Instance.new(result.wmi_ole_object)
         end
-        is_expected = validate_query_result(results, expected_result)
-        expect(is_expected).to eq(true)
+        validate_query_result(results, expected_result)
       end
     end
 
