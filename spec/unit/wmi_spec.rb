@@ -56,6 +56,7 @@ describe WmiLite::Wmi do
   end
 
   before(:each) do
+    stub_const('WIN32OLE', Class.new)
     WIN32OLE.stub(:new).with("WbemScripting.SWbemLocator").and_return(wbem_locator)
   end
 
