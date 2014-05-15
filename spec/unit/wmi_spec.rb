@@ -41,8 +41,8 @@ describe WmiLite::Wmi do
     if expected_result
       expected.each do | expected_value |
         actual_value = actual[index]
-        expected_value.invoke == actual_value.wmi_ole_object.invoke
-        expected_value.properties_.each do | expected_property |
+        expected_value.wmi_ole_object.invoke == actual_value.wmi_ole_object.invoke
+        expected_value.wmi_ole_object.properties_.each do | expected_property |
           if actual_value[expected_property.name].nil?
             expected_result = false
           end
@@ -76,7 +76,7 @@ describe WmiLite::Wmi do
     expect( result_count ).to eq(0)
   end
 
-  shared_examples_for "the first method" do
+  shared_examples_for "the first_of method" do
 
     let(:wmi_properties1) { { 'cores' => 4, 'name' => 'mycomputer1', 'diskspace' => 400, 'os' => 'windows' } }
     let(:wmi_properties2) { { 'cores' => 2, 'name' => 'mycomputer2', 'bios' => 'ami', 'os' => 'windows' } }
@@ -94,11 +94,116 @@ describe WmiLite::Wmi do
       it "should get one instance" do
         results = wmi.first_of('vm')
         expected_result = WmiLite::Wmi::Instance.new(native_query_result.first)
-        is_expected = validate_query_result([results], [expected_result.wmi_ole_object])
+        is_expected = validate_query_result([results], [expected_result])
         expect(is_expected).to eq(true)
       end
     end
+
+    context "when returning more than one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result2 }
+      let(:native_query_result) { native_query_result2 }
+
+      it "should get one instance" do
+        results = wmi.first_of('vm')
+        expected_result = WmiLite::Wmi::Instance.new(native_query_result.first)
+        is_expected = validate_query_result([results], [expected_result])
+        expect(is_expected).to eq(true)
+      end
+    end
+
   end
 
-  it_should_behave_like "the first method"
+  shared_examples_for "the instances_of method" do
+
+    let(:wmi_properties1) { { 'cores' => 4, 'name' => 'mycomputer1', 'diskspace' => 400, 'os' => 'windows' } }
+    let(:wmi_properties2) { { 'cores' => 2, 'name' => 'mycomputer2', 'bios' => 'ami', 'os' => 'windows' } }
+    let(:native_query_result) { [].to_enum }
+
+    it "should not fail with empty query results" do
+      results = wmi.instances_of('vm')
+      expect( results ).to eq([])
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result1 }
+      let(:native_query_result) { native_query_result1 }
+
+      it "should get one instance" do
+        results = wmi.instances_of('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        is_expected = validate_query_result(results, expected_result)
+        expect(is_expected).to eq(true)
+      end
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result2 }
+      let(:native_query_result) { native_query_result2 }
+
+      it "should get one instance" do
+        results = wmi.instances_of('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        is_expected = validate_query_result(results, expected_result)
+        expect(is_expected).to eq(true)
+      end
+    end
+
+  end
+
+  shared_examples_for "the query method" do
+
+    let(:wmi_properties1) { { 'cores' => 4, 'name' => 'mycomputer1', 'diskspace' => 400, 'os' => 'windows' } }
+    let(:wmi_properties2) { { 'cores' => 2, 'name' => 'mycomputer2', 'bios' => 'ami', 'os' => 'windows' } }
+    let(:native_query_result) { [].to_enum }
+
+    it "should not fail with empty query results" do
+      results = wmi.query('vm')
+      expect( results ).to eq([])
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result1 }
+      let(:native_query_result) { native_query_result1 }
+
+      it "should get one instance" do
+        results = wmi.query('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        is_expected = validate_query_result(results, expected_result)
+        expect(is_expected).to eq(true)
+      end
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result2 }
+      let(:native_query_result) { native_query_result2 }
+
+      it "should get one instance" do
+        results = wmi.query('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        is_expected = validate_query_result(results, expected_result)
+        expect(is_expected).to eq(true)
+      end
+    end
+
+  end
+
+
+  it_should_behave_like "the first_of method"
+
+  it_should_behave_like "the instances_of method"
+
+  it_should_behave_like "the query method"
+
 end

@@ -27,7 +27,7 @@ module WmiLite
       end
 
       def [](key)
-        @property_map[key]
+        @property_map[key.downcase]
       end
 
       private

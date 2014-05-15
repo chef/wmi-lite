@@ -54,7 +54,16 @@ module WmiLite
     private
 
     def start_query(wql_query)
-      @connection.ExecQuery(wql_query)
+      result = @connection.ExecQuery(wql_query)
+      raise_if_failed(result)
+      result
+    end
+
+    def raise_if_failed(result)
+      # Attempting to access the count property of the underlying
+      # COM (OLE) object will trigger an exception if the query
+      # was unsuccessful.
+      result.count
     end
 
     def new_connection(namespace)
