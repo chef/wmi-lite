@@ -144,5 +144,4 @@ describe WmiLite::Wmi, :windows_only do
     expect(caption_lower.length).to be > 0
     expect(caption_mixed).to eql(caption_lower)
   end
-
 end
