@@ -199,6 +199,28 @@ describe WmiLite::Wmi do
 
   end
 
+  context "when constructing a Ruby class instance" do
+    it "should not connect to WMI in the constructor" do
+      WmiLite::Wmi.any_instance.should_not_receive(:connect_to_namespace)
+      wmi_service_nil_namespace = WmiLite::Wmi.new
+      wmi_service_explicit_namespace = WmiLite::Wmi.new('root/cimv2')
+    end
+  end
+
+  context "when calling query methods" do
+    it "should only connect to WMI on the first query execution" do
+      WIN32OLE.should_receive(:new).with("WbemScripting.SWbemLocator").exactly(1).times.and_return(wbem_locator)
+      wmi_service = WmiLite::Wmi.new
+
+      # Make a lot of queries to be sure the connection is only created once
+      wmi_service.query('select * from Win32_Process')
+      wmi_service.query('select * from Win32_Process')
+      wmi_service.instances_of('Win32_Processor')
+      wmi_service.instances_of('Win32_Processor')
+      wmi_service.first_of('Win32_Group')
+      wmi_service.first_of('Win32_Group')
+    end
+  end
 
   it_should_behave_like "the first_of method"
 

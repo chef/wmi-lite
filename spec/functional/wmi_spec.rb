@@ -39,7 +39,8 @@ describe WmiLite::Wmi, :windows_only do
 
   shared_examples_for 'an invalid query' do
     it 'should raise an exception if an invalid namespace is specified' do
-      expect { invalid_wmi = WmiLite::Wmi.new('root/notvalid') }.to raise_error
+      invalid_wmi = WmiLite::Wmi.new('root/notvalid')
+      expect { invalid_wmi.ExecQuery('Win32_Process') }.to raise_error
     end
 
     it 'should raise an exception if an invalid class is specified' do

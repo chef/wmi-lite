@@ -22,7 +22,8 @@ require 'wmi-lite/wmi_instance'
 module WmiLite
   class Wmi
     def initialize(namespace = nil)
-      @connection = new_connection(namespace.nil? ? 'root/cimv2' : namespace)
+      @namespace = namespace
+      @connection = nil
     end
 
     def query(wql_query)
@@ -54,6 +55,7 @@ module WmiLite
     private
 
     def start_query(wql_query)
+      connect_to_namespace
       result = @connection.ExecQuery(wql_query)
       raise_if_failed(result)
       result
@@ -66,9 +68,12 @@ module WmiLite
       result.count
     end
 
-    def new_connection(namespace)
-      locator = WIN32OLE.new("WbemScripting.SWbemLocator")
-      locator.ConnectServer('.', namespace)
+    def connect_to_namespace
+      if @connection.nil?
+        namespace = @namespace.nil? ? 'root/cimv2' : @namespace
+        locator = WIN32OLE.new("WbemScripting.SWbemLocator")
+        @connection = locator.ConnectServer('.', namespace)
+      end
     end
 
     def wmi_result_to_snapshot(wmi_object)
