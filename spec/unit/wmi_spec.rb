@@ -149,6 +149,10 @@ describe WmiLite::Wmi do
   end
 
   shared_examples_for 'an invalid query' do
+    before(:each) do
+      stub_const('WIN32OLE', Class.new)
+      WIN32OLE.stub(:new).with("WbemScripting.SWbemLocator").and_return(wbem_locator)
+    end
     let(:unparseable_error) { 'unparseableerror' }
     it 'should raise an exception' do
       wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError.new(unparseable_error))
@@ -169,6 +173,10 @@ describe WmiLite::Wmi do
   end
 
   shared_examples_for 'an invalid namespace' do
+    before(:each) do
+      stub_const('WIN32OLE', Class.new)
+      WIN32OLE.stub(:new).with("WbemScripting.SWbemLocator").and_return(wbem_locator)
+    end
     let(:unparseable_error) { 'unparseableerror' }
     it 'should raise an exception' do
       wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError.new('unparseableerror'))
