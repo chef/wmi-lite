@@ -148,6 +148,44 @@ describe WmiLite::Wmi do
 
   end
 
+  shared_examples_for 'an invalid query' do
+    let(:unparseable_error) { 'unparseableerror' }
+    it 'should raise an exception' do
+      wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError.new(unparseable_error))
+      wmi_service = WmiLite::Wmi.new
+      expect { wmi_service.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
+    end
+
+    it 'should raise an exception that starts with the original exception message' do
+      wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError.new(unparseable_error))
+      wmi_service = WmiLite::Wmi.new
+      begin
+        wmi_service.send(query_method, wmi_query)
+      rescue WmiLite::WmiException => e
+        expect(e.message.start_with?(unparseable_error)).to eql(true)
+      end
+    end
+  end
+
+  shared_examples_for 'an invalid namespace' do
+    let(:unparseable_error) { 'unparseableerror' }
+    it 'should raise an exception' do
+      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError.new('unparseableerror'))
+      wmi_service = WmiLite::Wmi.new('notavalidnamespace')
+      expect { wmi_service.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
+    end
+
+    it 'should raise an exception that starts with the original exception message' do
+      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError.new('unparseableerror'))
+      wmi_service = WmiLite::Wmi.new
+      begin
+        wmi_service.send(query_method, wmi_query)
+      rescue WmiLite::WmiException => e
+        expect(e.message.start_with?(unparseable_error)).to eql(true)
+      end
+    end
+  end
+
   shared_examples_for "the query method" do
 
     let(:wmi_properties1) { { 'cores' => 4, 'name' => 'mycomputer1', 'diskspace' => 400, 'os' => 'windows' } }
@@ -210,6 +248,25 @@ describe WmiLite::Wmi do
       wmi_service.first_of('Win32_Group')
       wmi_service.first_of('Win32_Group')
     end
+  end
+
+  context 'when making invalid queries' do
+    let(:namespace) { nil }
+
+    let(:wmi_query) { 'invalidclass' }
+    let(:query_method) { :first_of }
+
+    it_behaves_like 'an invalid query'
+    it_behaves_like 'an invalid namespace'
+
+    let(:query_method) { :instances_of }
+    it_behaves_like 'an invalid query'
+    it_behaves_like 'an invalid namespace'
+
+    let(:query_method) { :query }
+    let(:wmi_query) { 'nosql_4_life' }
+    it_behaves_like 'an invalid query'
+    it_behaves_like 'an invalid namespace'
   end
 
   it_should_behave_like "the first_of method"

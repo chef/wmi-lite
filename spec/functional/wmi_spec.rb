@@ -35,16 +35,22 @@ describe WmiLite::Wmi, :windows_only do
       results = wmi.send(query_method, query_parameter)
       validate_wmi_results(results, wmi_class)
     end
+
+    describe 'when the namespace is invalid' do
+      it_behaves_like 'an invalid namespace'
+    end
   end
 
   shared_examples_for 'an invalid query' do
+    it 'should raise an exception' do
+      expect { wmi.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
+    end
+  end
+
+  shared_examples_for 'an invalid namespace' do
     it 'should raise an exception if an invalid namespace is specified' do
       invalid_wmi = WmiLite::Wmi.new('root/notvalid')
-      expect { invalid_wmi.ExecQuery('Win32_Process') }.to raise_error
-    end
-
-    it 'should raise an exception if an invalid class is specified' do
-      expect { wmi.send(query_method, wmi_query) }.to raise_error
+      expect { invalid_wmi.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
     end
   end
 
@@ -88,9 +94,16 @@ describe WmiLite::Wmi, :windows_only do
 
   context 'when making invalid queries' do
     let(:namespace) { nil }
-    let(:wmi_query) { 'invalidclass' }
 
+    let(:wmi_query) { 'invalidclass' }
     let(:query_method) { :first_of }
+    it_behaves_like 'an invalid query'
+
+    let(:query_method) { :instances_of }
+    it_behaves_like 'an invalid query'
+
+    let(:query_method) { :query }
+    let(:wmi_query) { 'nosql_4_life' }
     it_behaves_like 'an invalid query'
   end
 
