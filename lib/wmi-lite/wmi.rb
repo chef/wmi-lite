@@ -61,12 +61,12 @@ module WmiLite
 
     def start_query(wql_query, diagnostic_class_name = nil)
       result = nil
+      connect_to_namespace
       begin
-        connect_to_namespace
         result = @connection.ExecQuery(wql_query)
         raise_if_failed(result)
       rescue WIN32OLERuntimeError => native_exception
-        raise WmiException.new(native_exception, @namespace, wql_query, diagnostic_class_name)
+        raise WmiException.new(native_exception, :ExecQuery, @namespace, wql_query, diagnostic_class_name)
       end
       result
     end
@@ -82,7 +82,11 @@ module WmiLite
       if @connection.nil?
         namespace = @namespace.nil? ? 'root/cimv2' : @namespace
         locator = WIN32OLE.new("WbemScripting.SWbemLocator")
-        @connection = locator.ConnectServer('.', namespace)
+        begin
+          @connection = locator.ConnectServer('.', namespace)
+        rescue WIN32OLERuntimeError => native_exception
+          raise WmiException.new(native_exception, :ConnectServer, @namespace)
+        end
       end
     end
 

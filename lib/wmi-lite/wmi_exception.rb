@@ -18,30 +18,59 @@
 
 module WmiLite
   class WmiException < Exception
-    def initialize(exception, namespace, query, class_name)
+    def initialize(exception, wmi_method_context, namespace, query = nil, class_name = nil)
       error_message = exception.message
+      error_code = translate_error_code(error_message)
+
+      case wmi_method_context
+      when :ConnectServer
+        error_message = translate_wmi_connect_error_message(error_message, error_code, namespace)
+      when :ExecQuery
+        error_message = translate_query_error_message(error_message, error_code, namespace, query, class_name)
+      end
+
+      super(error_message)
+    end
+
+    private
+
+    def translate_error_code(error_message)
       error_code = nil
 
       # Parse the error to get the error status code
       error_code_match = error_message.match(/[^\:]+\:\s*([0-9A-Fa-f]{1,8}).*/)
       error_code = error_code_match.captures.first if error_code_match
-      error_code = '' if error_code.nil?
+      error_code ? error_code : ''
+    end
+
+    def translate_wmi_connect_error_message(native_message, error_code, namespace)
+      error_message = "An error occurred connecting to the WMI service for namespace \'#{namespace}\'. The namespace may not be valid, access may not be allowed to the WMI service, or the WMI service may not be available.\n#{native_message}"
+
+      if error_code =~ /8004100E/i
+        error_message = "The specified namespace name \'#{namespace}\' is not a valid namespace name or does not exist.\n#{native_message}"
+      end
+
+      error_message
+    end
+
+    def translate_query_error_message(native_message, error_code, namespace, query, class_name)
+      error_message = "An error occurred when querying namespace \'#{namespace}\' with query \'#{query}\'.\n#{native_message}"
+
+      error_code = translate_error_code(error_message)
 
       # Use the status code to generate a more friendly message
       case error_code
       when /80041010/i
         if class_name
-          error_message = "The specified class \'#{class_name}\' is not valid in the namespace \'#{namespace}\'.\n#{exception.message}."
+          error_message = "The specified class \'#{class_name}\' is not valid in the namespace \'#{namespace}\'.\n#{native_message}."
         else
-          error_message = "The specified query \'#{query}\' referenced a class that is not valid in the namespace \'#{namespace}\'\n#{exception.message}."
+          error_message = "The specified query \'#{query}\' referenced a class that is not valid in the namespace \'#{namespace}\'\n#{native_message}."
         end
-      when /8004100E/i
-        error_message = "The specified namespace \'#{namespace}\' is not valid.\n#{exception.message}"
       when /80041017/i
-        error_message = "The specified query \'#{query}\' is not valid.\n#{exception.message}"
+        error_message = "The specified query \'#{query}\' in namespace \'#{namespace}\' is not a syntactically valid query.\n#{native_message}"
       end
 
-      super(error_message)
+      error_message
     end
   end
 end

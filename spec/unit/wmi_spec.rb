@@ -162,7 +162,8 @@ describe WmiLite::Wmi do
       begin
         wmi_service.send(query_method, wmi_query)
       rescue WmiLite::WmiException => e
-        expect(e.message.start_with?(unparseable_error)).to eql(true)
+        expect(e.message.start_with?(unparseable_error)).to eql(false)
+        expect(e.message.end_with?(unparseable_error)).to eql(true)
       end
     end
   end
@@ -181,7 +182,8 @@ describe WmiLite::Wmi do
       begin
         wmi_service.send(query_method, wmi_query)
       rescue WmiLite::WmiException => e
-        expect(e.message.start_with?(unparseable_error)).to eql(true)
+        expect(e.message.start_with?(unparseable_error)).to eql(false)
+        expect(e.message.end_with?(unparseable_error)).to eql(true)
       end
     end
   end
