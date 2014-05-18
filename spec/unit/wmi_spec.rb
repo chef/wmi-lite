@@ -58,6 +58,7 @@ describe WmiLite::Wmi do
   before(:each) do
     stub_const('WIN32OLE', Class.new)
     WIN32OLE.stub(:new).with("WbemScripting.SWbemLocator").and_return(wbem_locator)
+    stub_const('WIN32OLERuntimeError', Class.new(Exception))
   end
 
   let(:wmi) { WmiLite::Wmi.new }
@@ -149,50 +150,49 @@ describe WmiLite::Wmi do
   end
 
   shared_examples_for 'an invalid query' do
-    before(:each) do
-      stub_const('WIN32OLE', Class.new)
-      WIN32OLE.stub(:new).with("WbemScripting.SWbemLocator").and_return(wbem_locator)
-    end
     let(:unparseable_error) { 'unparseableerror' }
     it 'should raise an exception' do
-      wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError.new(unparseable_error))
+      wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError)
       wmi_service = WmiLite::Wmi.new
       expect { wmi_service.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
     end
 
-    it 'should raise an exception that starts with the original exception message' do
+    it 'should raise an exception that ends with the original exception message' do
       wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError.new(unparseable_error))
       wmi_service = WmiLite::Wmi.new
+      error_message = nil
       begin
         wmi_service.send(query_method, wmi_query)
       rescue WmiLite::WmiException => e
-        expect(e.message.start_with?(unparseable_error)).to eql(false)
-        expect(e.message.end_with?(unparseable_error)).to eql(true)
+        error_message = e.message
       end
+      expect(error_message).not_to eql(nil)
+      expect(e.message.start_with?(unparseable_error)).to eql(false)
+      expect(e.message.end_with?(unparseable_error)).to eql(true)
     end
   end
 
   shared_examples_for 'an invalid namespace' do
-    before(:each) do
-      stub_const('WIN32OLE', Class.new)
-      WIN32OLE.stub(:new).with("WbemScripting.SWbemLocator").and_return(wbem_locator)
-    end
     let(:unparseable_error) { 'unparseableerror' }
     it 'should raise an exception' do
-      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError.new('unparseableerror'))
+      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError)
       wmi_service = WmiLite::Wmi.new('notavalidnamespace')
       expect { wmi_service.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
     end
 
     it 'should raise an exception that starts with the original exception message' do
-      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError.new('unparseableerror'))
+      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError.new(unparseable_error))
       wmi_service = WmiLite::Wmi.new
+      error_message = nil
       begin
         wmi_service.send(query_method, wmi_query)
       rescue WmiLite::WmiException => e
-        expect(e.message.start_with?(unparseable_error)).to eql(false)
-        expect(e.message.end_with?(unparseable_error)).to eql(true)
+        error_message = e.message
       end
+
+      expect(error_message).not_to eql(nil)
+      expect(error_message.start_with?(unparseable_error)).to eql(false)
+      expect(error_message.end_with?(unparseable_error)).to eql(true)
     end
   end
 
