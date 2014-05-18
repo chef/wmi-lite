@@ -18,31 +18,25 @@
 
 require 'win32ole' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
 require 'wmi-lite/wmi_instance'
+require 'wmi-lite/wmi_exception'
 
 module WmiLite
   class Wmi
     def initialize(namespace = nil)
-      @connection = new_connection(namespace.nil? ? 'root/cimv2' : namespace)
+      @namespace = namespace.nil? ? 'root/cimv2' : namespace
+      @connection = nil
     end
 
     def query(wql_query)
-      results = start_query(wql_query)
-      
-      result_set = []
-
-      results.each do | result | 
-        result_set.push(wmi_result_to_snapshot(result))
-      end
-      
-      result_set
+      query_with_context(wql_query)
     end
 
     def instances_of(wmi_class)
-      query("select * from #{wmi_class}")
+      query_with_context("select * from #{wmi_class}", wmi_class)
     end
 
     def first_of(wmi_class)
-      query_result = start_query("select * from #{wmi_class}")
+      query_result = start_query("select * from #{wmi_class}", wmi_class)
       first_result = nil
       query_result.each do | record |
         first_result = record
@@ -53,13 +47,47 @@ module WmiLite
 
     private
 
-    def start_query(wql_query)
-      @connection.ExecQuery(wql_query)
+    def query_with_context(wql_query, diagnostic_class_name = nil)
+      results = start_query(wql_query, diagnostic_class_name)
+
+      result_set = []
+
+      results.each do | result |
+        result_set.push(wmi_result_to_snapshot(result))
+      end
+
+      result_set
     end
 
-    def new_connection(namespace)
-      locator = WIN32OLE.new("WbemScripting.SWbemLocator")
-      locator.ConnectServer('.', namespace)
+    def start_query(wql_query, diagnostic_class_name = nil)
+      result = nil
+      connect_to_namespace
+      begin
+        result = @connection.ExecQuery(wql_query)
+        raise_if_failed(result)
+      rescue WIN32OLERuntimeError => native_exception
+        raise WmiException.new(native_exception, :ExecQuery, @namespace, wql_query, diagnostic_class_name)
+      end
+      result
+    end
+
+    def raise_if_failed(result)
+      # Attempting to access the count property of the underlying
+      # COM (OLE) object will trigger an exception if the query
+      # was unsuccessful.
+      result.count
+    end
+
+    def connect_to_namespace
+      if @connection.nil?
+        namespace = @namespace.nil? ? 'root/cimv2' : @namespace
+        locator = WIN32OLE.new("WbemScripting.SWbemLocator")
+        begin
+          @connection = locator.ConnectServer('.', namespace)
+        rescue WIN32OLERuntimeError => native_exception
+          raise WmiException.new(native_exception, :ConnectServer, @namespace)
+        end
+      end
     end
 
     def wmi_result_to_snapshot(wmi_object)
