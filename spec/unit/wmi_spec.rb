@@ -35,33 +35,30 @@ describe WmiLite::Wmi do
   let(:wbem_connection) { double 'WIN32OLE', :ExecQuery => native_query_result }
 
   def validate_query_result(actual, expected)
-    expected_result = actual.count == expected.count
+    expect(actual.count).to eql(expected.count)
 
     index = 0
-    if expected_result
-      expected.each do | expected_value |
-        actual_value = actual[index]
-        expected_value.invoke == actual_value.wmi_ole_object.invoke
-        expected_value.properties_.each do | expected_property |
-          if actual_value[expected_property.name].nil?
-            expected_result = false
-          end
-          if !! actual_value.wmi_ole_object.properties_.find { | actual_property | actual_property == expected_property.name }
-            expected_result = false
-          end
-          if ! expected_result
-            break
-          end
-        end
-        index += 1
-      end
-    end
 
-    expected_result
+    expected.each do | expected_value |
+      actual_value = actual[index]
+      expected_value.wmi_ole_object.invoke == actual_value.wmi_ole_object.invoke
+      expected_value.wmi_ole_object.properties_.each do | expected_property |
+
+        expect(actual_value[expected_property.name]).not_to eql(nil)
+
+        names = actual_value.wmi_ole_object.properties_.map { | property | property.name }
+
+        expect(names.include?(expected_property.name)).to eql(true)
+
+      end
+      index += 1
+    end
   end
 
   before(:each) do
+    stub_const('WIN32OLE', Class.new)
     WIN32OLE.stub(:new).with("WbemScripting.SWbemLocator").and_return(wbem_locator)
+    stub_const('WIN32OLERuntimeError', Class.new(Exception))
   end
 
   let(:wmi) { WmiLite::Wmi.new }
@@ -76,7 +73,7 @@ describe WmiLite::Wmi do
     expect( result_count ).to eq(0)
   end
 
-  shared_examples_for "the first method" do
+  shared_examples_for "the first_of method" do
 
     let(:wmi_properties1) { { 'cores' => 4, 'name' => 'mycomputer1', 'diskspace' => 400, 'os' => 'windows' } }
     let(:wmi_properties2) { { 'cores' => 2, 'name' => 'mycomputer2', 'bios' => 'ami', 'os' => 'windows' } }
@@ -94,11 +91,198 @@ describe WmiLite::Wmi do
       it "should get one instance" do
         results = wmi.first_of('vm')
         expected_result = WmiLite::Wmi::Instance.new(native_query_result.first)
-        is_expected = validate_query_result([results], [expected_result.wmi_ole_object])
-        expect(is_expected).to eq(true)
+        validate_query_result([results], [expected_result])
       end
+    end
+
+    context "when returning more than one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result2 }
+      let(:native_query_result) { native_query_result2 }
+
+      it "should get one instance" do
+        results = wmi.first_of('vm')
+        expected_result = WmiLite::Wmi::Instance.new(native_query_result.first)
+        validate_query_result([results], [expected_result])
+      end
+    end
+
+  end
+
+  shared_examples_for "the instances_of method" do
+
+    let(:wmi_properties1) { { 'cores' => 4, 'name' => 'mycomputer1', 'diskspace' => 400, 'os' => 'windows' } }
+    let(:wmi_properties2) { { 'cores' => 2, 'name' => 'mycomputer2', 'bios' => 'ami', 'os' => 'windows' } }
+    let(:native_query_result) { [].to_enum }
+
+    it "should not fail with empty query results" do
+      results = wmi.instances_of('vm')
+      expect( results ).to eq([])
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result1 }
+      let(:native_query_result) { native_query_result1 }
+
+      it "should get one instance" do
+        results = wmi.instances_of('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        validate_query_result(results, expected_result)
+      end
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result2 }
+      let(:native_query_result) { native_query_result2 }
+
+      it "should get one instance" do
+        results = wmi.instances_of('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        validate_query_result(results, expected_result)
+      end
+    end
+
+  end
+
+  shared_examples_for 'an invalid query' do
+    let(:unparseable_error) { 'unparseableerror' }
+    it 'should raise an exception' do
+      wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError)
+      wmi_service = WmiLite::Wmi.new
+      expect { wmi_service.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
+    end
+
+    it 'should raise an exception that ends with the original exception message' do
+      wbem_connection.should_receive(:ExecQuery).and_raise(WIN32OLERuntimeError.new(unparseable_error))
+      wmi_service = WmiLite::Wmi.new
+      error_message = nil
+      begin
+        wmi_service.send(query_method, wmi_query)
+      rescue WmiLite::WmiException => e
+        error_message = e.message
+      end
+      expect(error_message).not_to eql(nil)
+      expect(e.message.start_with?(unparseable_error)).to eql(false)
+      expect(e.message.end_with?(unparseable_error)).to eql(true)
     end
   end
 
-  it_should_behave_like "the first method"
+  shared_examples_for 'an invalid namespace' do
+    let(:unparseable_error) { 'unparseableerror' }
+    it 'should raise an exception' do
+      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError)
+      wmi_service = WmiLite::Wmi.new('notavalidnamespace')
+      expect { wmi_service.send(query_method, wmi_query) }.to raise_error(WmiLite::WmiException)
+    end
+
+    it 'should raise an exception that starts with the original exception message' do
+      wbem_locator.should_receive(:ConnectServer).and_raise(WIN32OLERuntimeError.new(unparseable_error))
+      wmi_service = WmiLite::Wmi.new
+      error_message = nil
+      begin
+        wmi_service.send(query_method, wmi_query)
+      rescue WmiLite::WmiException => e
+        error_message = e.message
+      end
+
+      expect(error_message).not_to eql(nil)
+      expect(error_message.start_with?(unparseable_error)).to eql(false)
+      expect(error_message.end_with?(unparseable_error)).to eql(true)
+    end
+  end
+
+  shared_examples_for "the query method" do
+
+    let(:wmi_properties1) { { 'cores' => 4, 'name' => 'mycomputer1', 'diskspace' => 400, 'os' => 'windows' } }
+    let(:wmi_properties2) { { 'cores' => 2, 'name' => 'mycomputer2', 'bios' => 'ami', 'os' => 'windows' } }
+    let(:native_query_result) { [].to_enum }
+
+    it "should not fail with empty query results" do
+      results = wmi.query('vm')
+      expect( results ).to eq([])
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result1 }
+      let(:native_query_result) { native_query_result1 }
+
+      it "should get one instance" do
+        results = wmi.query('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        validate_query_result(results, expected_result)
+      end
+    end
+
+    context "when returning one instance in the query" do
+      let(:wmi_query_result) { wmi_query_result2 }
+      let(:native_query_result) { native_query_result2 }
+
+      it "should get one instance" do
+        results = wmi.query('vm')
+        index = 0
+        expected_result = results.map do | result |
+          WmiLite::Wmi::Instance.new(result.wmi_ole_object)
+        end
+        validate_query_result(results, expected_result)
+      end
+    end
+
+  end
+
+  context "when constructing a Ruby class instance" do
+    it "should not connect to WMI in the constructor" do
+      WmiLite::Wmi.any_instance.should_not_receive(:connect_to_namespace)
+      wmi_service_nil_namespace = WmiLite::Wmi.new
+      wmi_service_explicit_namespace = WmiLite::Wmi.new('root/cimv2')
+    end
+  end
+
+  context "when calling query methods" do
+    it "should only connect to WMI on the first query execution" do
+      WIN32OLE.should_receive(:new).with("WbemScripting.SWbemLocator").exactly(1).times.and_return(wbem_locator)
+      wmi_service = WmiLite::Wmi.new
+
+      # Make a lot of queries to be sure the connection is only created once
+      wmi_service.query('select * from Win32_Process')
+      wmi_service.query('select * from Win32_Process')
+      wmi_service.instances_of('Win32_Processor')
+      wmi_service.instances_of('Win32_Processor')
+      wmi_service.first_of('Win32_Group')
+      wmi_service.first_of('Win32_Group')
+    end
+  end
+
+  context 'when making invalid queries' do
+    let(:namespace) { nil }
+
+    let(:wmi_query) { 'invalidclass' }
+    let(:query_method) { :first_of }
+
+    it_behaves_like 'an invalid query'
+    it_behaves_like 'an invalid namespace'
+
+    let(:query_method) { :instances_of }
+    it_behaves_like 'an invalid query'
+    it_behaves_like 'an invalid namespace'
+
+    let(:query_method) { :query }
+    let(:wmi_query) { 'nosql_4_life' }
+    it_behaves_like 'an invalid query'
+    it_behaves_like 'an invalid namespace'
+  end
+
+  it_should_behave_like "the first_of method"
+
+  it_should_behave_like "the instances_of method"
+
+  it_should_behave_like "the query method"
+
 end
