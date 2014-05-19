@@ -3,7 +3,7 @@ Wmi-Lite
 
 `wmi-lite` is a lightweight Ruby gem utility library for accessing basic
 [Windows Management Instrumentation (WMI)](http://msdn.microsoft.com/en-us/library/aa394582(v=vs.85).aspx)
-functionality on Windows. It has no dependencies other than version 1.9 or greater of the Ruby interpreter
+functionality on Windows. It has no dependencies outside of the Ruby interpreter
 and libraries and of course the Windows operating system.
 
 Installation
