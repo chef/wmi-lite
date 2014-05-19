@@ -166,6 +166,11 @@ describe WmiLite::Wmi do
       rescue WmiLite::WmiException => e
         error_message = e.message
       end
+
+      # Exception messages look a like a customized error string followed by
+      # the original, less friendly message. A change here affects only
+      # aestethics of human diagnostics, this may be changed with no effect
+      # on libraries or applications.
       expect(error_message).not_to eql(nil)
       expect(e.message.start_with?(unparseable_error)).to eql(false)
       expect(e.message.end_with?(unparseable_error)).to eql(true)
@@ -190,6 +195,8 @@ describe WmiLite::Wmi do
         error_message = e.message
       end
 
+      # See previous comment on this validation of human readability -- a change
+      # to the format / content of these messages will not break applications.
       expect(error_message).not_to eql(nil)
       expect(error_message.start_with?(unparseable_error)).to eql(false)
       expect(error_message.end_with?(unparseable_error)).to eql(true)
