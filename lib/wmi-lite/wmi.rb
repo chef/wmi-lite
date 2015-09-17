@@ -17,14 +17,23 @@
 #
 
 require 'win32ole' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+require 'wmi-lite/exceptions'
 require 'wmi-lite/wmi_instance'
-require 'wmi-lite/wmi_exception'
+require 'timeout'
 
 module WmiLite
   class Wmi
     def initialize(namespace = nil)
       @namespace = namespace.nil? ? 'root/cimv2' : namespace
       @connection = nil
+
+      # This timeout should only be reached if there is something wrong 
+      # with the WMI subsystem causing it to hang requests
+      @timeout = 120
+    end
+
+    def set_timeout(timeout)
+      @timeout = timeout
     end
 
     def query(wql_query)
@@ -61,12 +70,14 @@ module WmiLite
 
     def start_query(wql_query, diagnostic_class_name = nil)
       result = nil
-      connect_to_namespace
-      begin
-        result = @connection.ExecQuery(wql_query)
-        raise_if_failed(result)
-      rescue WIN32OLERuntimeError => native_exception
-        raise WmiException.new(native_exception, :ExecQuery, @namespace, wql_query, diagnostic_class_name)
+      Timeout::timeout(@timeout, WmiTimeoutException) do
+        connect_to_namespace
+        begin
+          result = @connection.ExecQuery(wql_query)
+          raise_if_failed(result)
+        rescue WIN32OLERuntimeError => native_exception
+          raise WmiException.new(native_exception, :ExecQuery, @namespace, wql_query, diagnostic_class_name)
+        end
       end
       result
     end

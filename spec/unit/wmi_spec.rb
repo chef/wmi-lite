@@ -286,6 +286,20 @@ describe WmiLite::Wmi do
     it_behaves_like 'an invalid namespace'
   end
 
+  context "when query exceeds timeout" do
+    before do
+      allow(wbem_connection).to receive(:ExecQuery) do
+        sleep 5
+        native_query_result
+      end
+      subject.set_timeout(0.1)
+    end
+
+    it "should throw" do
+      expect{ subject.query('select * from Win32_Process') }.to raise_error(WmiLite::WmiTimeoutException)
+    end
+  end
+
   it_should_behave_like "the first_of method"
 
   it_should_behave_like "the instances_of method"

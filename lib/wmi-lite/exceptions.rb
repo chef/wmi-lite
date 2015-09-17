@@ -17,6 +17,12 @@
 #
 
 module WmiLite
+  class WmiTimeoutException < RuntimeError
+    def initalize
+      super("WMI timed out while attempting to execute your query. If you continue to see this exception try restarting the Winmgmt service.")
+    end
+  end
+
   class WmiException < Exception
     def initialize(exception, wmi_method_context, namespace, query = nil, class_name = nil)
       error_message = exception.message
@@ -74,4 +80,3 @@ module WmiLite
     end
   end
 end
-    
