@@ -292,8 +292,9 @@ describe WmiLite::Wmi do
         sleep 5
         native_query_result
       end
-      subject.set_timeout(0.1)
     end
+
+    subject { WmiLite::Wmi.new(nil, 0.1) }
 
     it "should throw" do
       expect{ subject.query('select * from Win32_Process') }.to raise_error(WmiLite::WmiTimeoutException)

@@ -23,16 +23,12 @@ require 'timeout'
 
 module WmiLite
   class Wmi
-    def initialize(namespace = nil)
+    def initialize(namespace = nil, timeout = 0)
       @namespace = namespace.nil? ? 'root/cimv2' : namespace
       @connection = nil
 
       # This timeout should only be reached if there is something wrong 
       # with the WMI subsystem causing it to hang requests
-      @timeout = 120
-    end
-
-    def set_timeout(timeout)
       @timeout = timeout
     end
 
