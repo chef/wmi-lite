@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'wmi-lite'
   spec.version       = WmiLite::VERSION
   spec.authors       = ['Adam Edwards']
-  spec.email         = ['dev@getchef.com']
+  spec.email         = ['dev@chef.io']
   spec.description   = 'A lightweight utility over win32ole for accessing basic ' \
                        'WMI (Windows Management Instrumentation) functionality ' \
                        'in the Microsoft Windows operating system. It has no '  \
