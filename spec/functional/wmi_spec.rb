@@ -1,5 +1,5 @@
 #
-# Author:: Adam Edwards (<adamed@getchef.com>)
+# Author:: Adam Edwards (<adamed@chef.io>)
 #
 # Copyright:: 2014, Chef Software, Inc.
 #
@@ -76,18 +76,18 @@ describe WmiLite::Wmi, :windows_only do
     let(:cardinality_transform) { lambda{|x| x} }
     context 'using first_of' do
       let(:cardinality_transform) { lambda{|x| x.nil? ? [] : [x] } }
-      let(:query_method) { :first_of } 
+      let(:query_method) { :first_of }
       it_behaves_like 'a valid WMI query'
     end
 
     context 'using instances_of' do
-      let(:query_method) { :instances_of } 
+      let(:query_method) { :instances_of }
       it_behaves_like 'a valid WMI query'
     end
 
     context 'using query' do
       let(:wmi_query) { "select * from #{wmi_class}" }
-      let(:query_method) { :query } 
+      let(:query_method) { :query }
       it_behaves_like 'a valid WMI query'
     end
   end
@@ -132,13 +132,13 @@ describe WmiLite::Wmi, :windows_only do
 
           # Turn %SYSTEMROOT% into c:\windows
           # so we can compare with what's in ENV
-          evaluated_value = `echo #{value}`.strip 
+          evaluated_value = `echo #{value}`.strip
 
           expect(evaluated_value).to eql(`echo #{ENV[name]}`.strip)
           verified_count += 1
         end
       end
-      
+
       # There are at least 3 variables we could verify in a default
       # Windows configuration, make sure we saw some
       expect(verified_count).to be >= 3
@@ -151,7 +151,7 @@ describe WmiLite::Wmi, :windows_only do
     caption_mixed = result['Caption']
     caption_lower = result['caption']
 
-    expect(caption_mixed.nil?).to eql(false) 
+    expect(caption_mixed.nil?).to eql(false)
     expect(caption_lower.nil?).to eql(false)
 
     expect(caption_mixed.length).to be > 0

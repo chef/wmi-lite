@@ -1,5 +1,5 @@
 #
-# Author:: Adam Edwards (<adamed@getchef.com>)
+# Author:: Adam Edwards (<adamed@chef.io>)
 # Copyright:: Copyright 2014 Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
@@ -74,4 +74,4 @@ module WmiLite
     end
   end
 end
-    
+

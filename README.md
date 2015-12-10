@@ -1,6 +1,9 @@
 Wmi-Lite
 ========
 
+[![Build Status](https://travis-ci.org/chef/wmi-lite.svg?branch=master)](https://travis-ci.org/chef/wmi-lite)
+[![Gem Version](https://badge.fury.io/rb/wmi-lite.svg)](https://badge.fury.io/rb/wmi-lite)
+
 `wmi-lite` is a lightweight Ruby gem utility library for accessing basic
 [Windows Management Instrumentation (WMI)](http://msdn.microsoft.com/en-us/library/aa394582(v=vs.85).aspx)
 functionality on Windows. It has no dependencies outside of the Ruby interpreter
@@ -93,8 +96,8 @@ puts
 License & Authors
 -----------------
 
-Author:: Adam Edwards (<adamed@getchef.com>)
-Copyright:: Copyright (c) 2014 Chef Software, Inc.
+Author:: Adam Edwards (<adamed@chef.io>)
+Copyright:: Copyright (c) 2014-2015 Chef Software, Inc.
 License:: Apache License, Version 2.0
 
 Licensed under the Apache License, Version 2.0 (the "License");
