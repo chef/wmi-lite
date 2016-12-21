@@ -17,7 +17,7 @@
 #
 
 module WmiLite
-  class WmiException < Exception
+  class WmiException < StandardError
     def initialize(exception, wmi_method_context, namespace, query = nil, class_name = nil)
       error_message = exception.message
       error_code = translate_error_code(error_message)
