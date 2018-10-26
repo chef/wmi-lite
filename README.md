@@ -1,5 +1,4 @@
-Wmi-Lite
-========
+# Wmi-Lite
 
 [![Build Status](https://travis-ci.org/chef/wmi-lite.svg?branch=master)](https://travis-ci.org/chef/wmi-lite)
 [![Gem Version](https://badge.fury.io/rb/wmi-lite.svg)](https://badge.fury.io/rb/wmi-lite)
@@ -9,15 +8,14 @@ Wmi-Lite
 functionality on Windows. It has no dependencies outside of the Ruby interpreter
 and libraries and of course the Windows operating system.
 
-Installation
-------------
+## Installation
 
 To install it, run:
 
     gem install wmi-lite
 
-Usage
------
+## Usage
+
 To use `wmi-lite` in your Ruby source code, just `require` it:
 
 ```ruby
@@ -93,13 +91,25 @@ end
 puts
 ```
 
-License & Authors
------------------
 
-Author:: Adam Edwards (<adamed@chef.io>)
-Copyright:: Copyright (c) 2014-2015 Chef Software, Inc.
-License:: Apache License, Version 2.0
+## Development Documentation
 
+All documentation is written using YARD. You can generate a by running:
+
+```
+rake docs
+```
+
+## Contributing
+
+For information on contributing to this project please see our [Contributing Documentation](https://github.com/chef/chef/blob/master/CONTRIBUTING.md)
+
+## License & Copyright
+
+- Copyright:: Copyright (c) 2014-2018 Chef Software, Inc.
+- License:: Apache License, Version 2.0
+
+```text
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -111,4 +121,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
+```
