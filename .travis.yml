@@ -1,7 +1,7 @@
 sudo: false
 language: ruby
 cache: bundler
-distro: xenial
+dist: xenial
 
 matrix:
   include:
