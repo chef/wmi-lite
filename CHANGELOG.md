@@ -1,8 +1,16 @@
 # WMI-Lite  Change Log
 
+<!-- latest_release 1.0.2 -->
+## [v1.0.2](https://github.com/chef/wmi-lite/tree/v1.0.2) (2019-01-16)
+
+#### Merged Pull Requests
+- Unpin bundler dev dep [#9](https://github.com/chef/wmi-lite/pull/9) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=1.0.1 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Unpin bundler dev dep [#9](https://github.com/chef/wmi-lite/pull/9) ([tas50](https://github.com/tas50)) <!-- 1.0.2 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
