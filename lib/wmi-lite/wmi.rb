@@ -16,14 +16,14 @@
 # limitations under the License.
 #
 
-require 'win32ole' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-require 'wmi-lite/wmi_instance'
-require 'wmi-lite/wmi_exception'
+require "win32ole" if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+require "wmi-lite/wmi_instance"
+require "wmi-lite/wmi_exception"
 
 module WmiLite
   class Wmi
     def initialize(namespace = nil)
-      @namespace = namespace.nil? ? 'root/cimv2' : namespace
+      @namespace = namespace.nil? ? "root/cimv2" : namespace
       @connection = nil
     end
 
@@ -38,7 +38,7 @@ module WmiLite
     def first_of(wmi_class)
       query_result = start_query("select * from #{wmi_class}", wmi_class)
       first_result = nil
-      query_result.each do | record |
+      query_result.each do |record|
         first_result = record
         break
       end
@@ -52,7 +52,7 @@ module WmiLite
 
       result_set = []
 
-      results.each do | result |
+      results.each do |result|
         result_set.push(wmi_result_to_snapshot(result))
       end
 
@@ -80,10 +80,10 @@ module WmiLite
 
     def connect_to_namespace
       if @connection.nil?
-        namespace = @namespace.nil? ? 'root/cimv2' : @namespace
+        namespace = @namespace.nil? ? "root/cimv2" : @namespace
         locator = WIN32OLE.new("WbemScripting.SWbemLocator")
         begin
-          @connection = locator.ConnectServer('.', namespace)
+          @connection = locator.ConnectServer(".", namespace)
         rescue WIN32OLERuntimeError => native_exception
           raise WmiException.new(native_exception, :ConnectServer, @namespace)
         end

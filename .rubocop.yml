@@ -1,0 +1,8 @@
+Lint/UselessAssignment:
+  Exclude:
+    - 'lib/wmi-lite/wmi.rb'
+    - 'spec/unit/wmi_spec.rb'
+
+Lint/Void:
+  Exclude:
+    - 'spec/unit/wmi_spec.rb'
