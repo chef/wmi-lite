@@ -1,8 +1,16 @@
 # WMI-Lite  Change Log
 
+<!-- latest_release 1.0.3 -->
+## [v1.0.3](https://github.com/chef/wmi-lite/tree/v1.0.3) (2019-12-21)
+
+#### Merged Pull Requests
+- Migrate testing to Buildkite [#11](https://github.com/chef/wmi-lite/pull/11) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=1.0.2 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Migrate testing to Buildkite [#11](https://github.com/chef/wmi-lite/pull/11) ([tas50](https://github.com/tas50)) <!-- 1.0.3 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
