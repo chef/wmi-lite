@@ -1,6 +1,6 @@
 #
 # Author:: Adam Edwards (<adamed@chef.io>)
-# Copyright:: Copyright 2014 Chef Software, Inc.
+# Copyright:: Copyright 2014-2019 Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,4 +16,4 @@
 # limitations under the License.
 #
 
-require "wmi-lite/wmi"
+require_relative 'wmi-lite/wmi'

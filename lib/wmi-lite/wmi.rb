@@ -1,6 +1,6 @@
 #
 # Author:: Adam Edwards (<adamed@chef.io>)
-# Copyright:: Copyright 2014 Chef Software, Inc.
+# Copyright:: Copyright 2014-2019 Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,9 @@
 # limitations under the License.
 #
 
-require "win32ole" if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-require "wmi-lite/wmi_instance"
-require "wmi-lite/wmi_exception"
+require 'win32ole' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+require_relative 'wmi_instance'
+require_relative 'wmi_exception'
 
 module WmiLite
   class Wmi
