@@ -20,8 +20,4 @@ Gem::Specification.new do |spec|
 
   spec.files         = %w{LICENSE} + Dir.glob("lib/**/*")
   spec.require_paths = ['lib']
-
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'rake'
 end
