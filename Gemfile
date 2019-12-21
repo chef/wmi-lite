@@ -14,7 +14,7 @@ group :test do
   gem "rake"
 end
 
-group :development do
+group :debug do
   gem "pry"
   gem "pry-byebug"
   gem "pry-stack_explorer"
