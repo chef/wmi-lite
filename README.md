@@ -1,6 +1,6 @@
 # Wmi-Lite
 
-[![Build Status](https://travis-ci.org/chef/wmi-lite.svg?branch=master)](https://travis-ci.org/chef/wmi-lite)
+[![Build status](https://badge.buildkite.com/7d8ce7c4384b331b3e5dc0c1f7475b172ca3f955c6f9f3f284.svg?branch=master)](https://buildkite.com/chef-oss/chef-wmi-lite-master-verify)
 [![Gem Version](https://badge.fury.io/rb/wmi-lite.svg)](https://badge.fury.io/rb/wmi-lite)
 
 `wmi-lite` is a lightweight Ruby gem utility library for accessing basic
