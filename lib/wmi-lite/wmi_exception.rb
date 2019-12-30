@@ -17,7 +17,7 @@
 #
 
 module WmiLite
-  class WmiException < Exception
+  class WmiException < RuntimeError
     def initialize(exception, wmi_method_context, namespace, query = nil, class_name = nil)
       error_message = exception.message
       error_code = translate_error_code(error_message)
@@ -40,7 +40,7 @@ module WmiLite
       # Parse the error to get the error status code
       error_code_match = error_message.match(/[^\:]+\:\s*([0-9A-Fa-f]{1,8}).*/)
       error_code = error_code_match.captures.first if error_code_match
-      error_code ? error_code : ''
+      error_code ? error_code : ""
     end
 
     def translate_wmi_connect_error_message(native_message, error_code, namespace)
@@ -74,4 +74,3 @@ module WmiLite
     end
   end
 end
-
