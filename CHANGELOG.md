@@ -1,15 +1,16 @@
 # WMI-Lite  Change Log
 
-<!-- latest_release 1.0.4 -->
-## [v1.0.4](https://github.com/chef/wmi-lite/tree/v1.0.4) (2019-12-30)
+<!-- latest_release 1.0.5 -->
+## [v1.0.5](https://github.com/chef/wmi-lite/tree/v1.0.5) (2019-12-30)
 
 #### Merged Pull Requests
-- Add necessary dev deps to the Gemfile + Chefstyle autocorrect [#12](https://github.com/chef/wmi-lite/pull/12) ([tas50](https://github.com/tas50))
+- Substitute require for require_relative [#10](https://github.com/chef/wmi-lite/pull/10) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
 <!-- release_rollup since=1.0.2 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Substitute require for require_relative [#10](https://github.com/chef/wmi-lite/pull/10) ([tas50](https://github.com/tas50)) <!-- 1.0.5 -->
 - Add necessary dev deps to the Gemfile + Chefstyle autocorrect [#12](https://github.com/chef/wmi-lite/pull/12) ([tas50](https://github.com/tas50)) <!-- 1.0.4 -->
 - Migrate testing to Buildkite [#11](https://github.com/chef/wmi-lite/pull/11) ([tas50](https://github.com/tas50)) <!-- 1.0.3 -->
 <!-- release_rollup -->
