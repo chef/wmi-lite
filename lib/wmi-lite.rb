@@ -16,4 +16,4 @@
 # limitations under the License.
 #
 
-require_relative 'wmi-lite/wmi'
+require_relative "wmi-lite/wmi"

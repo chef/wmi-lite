@@ -16,9 +16,9 @@
 # limitations under the License.
 #
 
-require 'win32ole' if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-require_relative 'wmi_instance'
-require_relative 'wmi_exception'
+require "win32ole" if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+require_relative "wmi_instance"
+require_relative "wmi_exception"
 
 module WmiLite
   class Wmi
