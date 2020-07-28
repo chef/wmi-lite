@@ -34,7 +34,7 @@ that object.
 * Each instance is represented by a Ruby `Hash` for which each property value of the instance is indexed by
   the string name of the property as documented in the [WMI Schema](http://technet.microsoft.com/en-us/library/cc180287.aspx) or
   as registered in the local system's WMI repository.
-* The string name specified to the aformentioned `Hash` is case insensitive.
+* The string name specified to the aforementioned `Hash` is case insensitive.
 
 #### Examples
 Use of the `instances_of`, `query`, and `first_of` methods of the `WmiLite::Wmi` object is demonstrated below.

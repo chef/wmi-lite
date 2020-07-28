@@ -169,7 +169,7 @@ describe WmiLite::Wmi do
 
       # Exception messages look a like a customized error string followed by
       # the original, less friendly message. A change here affects only
-      # aestethics of human diagnostics, this may be changed with no effect
+      # aesthetics of human diagnostics, this may be changed with no effect
       # on libraries or applications.
       expect(error_message).not_to eql(nil)
       expect(e.message.start_with?(unparseable_error)).to eql(false)
