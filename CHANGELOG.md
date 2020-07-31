@@ -1,8 +1,16 @@
 # WMI-Lite  Change Log
 
+<!-- latest_release 1.0.6 -->
+## [v1.0.6](https://github.com/chef/wmi-lite/tree/v1.0.6) (2020-07-31)
+
+#### Merged Pull Requests
+- Minor spelling mistakes &amp; remove github lock config [#13](https://github.com/chef/wmi-lite/pull/13) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=1.0.5 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Minor spelling mistakes &amp; remove github lock config [#13](https://github.com/chef/wmi-lite/pull/13) ([tas50](https://github.com/tas50)) <!-- 1.0.6 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
