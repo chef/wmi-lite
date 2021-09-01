@@ -19,5 +19,5 @@ group :debug do
   gem "pry"
   gem "pry-byebug"
   gem "rb-readline"
-  gem "simplecov", "~> 0.9"
+  gem "simplecov", "~> 0.18.5" # pin until we drop ruby support 2.4
 end
