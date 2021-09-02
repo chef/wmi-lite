@@ -11,13 +11,13 @@ end
 group :test do
   gem "chefstyle", "= 1.2.0"
   gem "rspec", "~> 3.1"
+  gem "docile", "~> 1.3.5" # pin until we drop ruby support 2.4
   gem "rake"
 end
 
 group :debug do
   gem "pry"
   gem "pry-byebug"
-  gem "pry-stack_explorer", "~> 0.4.0" # pin until we drop ruby < 2.6
   gem "rb-readline"
-  gem "simplecov", "~> 0.9"
+  gem "simplecov", "~> 0.18.5" # pin until we drop ruby support 2.4
 end
