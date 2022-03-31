@@ -1,3 +1,3 @@
 module WmiLite
-  VERSION = "1.0.6".freeze
+  VERSION = "1.0.7".freeze
 end
