@@ -122,8 +122,6 @@ describe WmiLite::Wmi, :windows_only do
       #
       # Update 3/31/2022
       # There is no so much variability in the environment variables that we moved from sampling all of them to a select few
-
-
       ignore = { "path" => true, "pathext" => true, "processor_architecture" => true, "psmodulepath" => true, "username" => true }
       results.each do |result|
         if ! variables.key?(result["name"]) || result["username"] != "<SYSTEM>"
@@ -134,7 +132,6 @@ describe WmiLite::Wmi, :windows_only do
       processor_count_from_wmi = variables["NUMBER_OF_PROCESSORS"]
       processor_count_from_ruby = `echo #{ENV["NUMBER_OF_PROCESSORS"]}`.strip
       expect(processor_count_from_wmi).to eql(processor_count_from_ruby)
-
 
       operating_system_from_wmi = variables["OS"]
       operating_system_from_ruby = `echo #{ENV["OS"]}`.strip
