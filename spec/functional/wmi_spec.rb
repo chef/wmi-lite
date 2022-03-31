@@ -122,7 +122,6 @@ describe WmiLite::Wmi, :windows_only do
       #
       # Update 3/31/2022
       # There is no so much variability in the environment variables that we moved from sampling all of them to a select few
-      ignore = { "path" => true, "pathext" => true, "processor_architecture" => true, "psmodulepath" => true, "username" => true }
       results.each do |result|
         if ! variables.key?(result["name"]) || result["username"] != "<SYSTEM>"
           variables[result["name"]] = result["variablevalue"]
