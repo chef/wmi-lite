@@ -115,10 +115,15 @@ describe WmiLite::Wmi, :windows_only do
       variables = {}
 
       # Skip some environment variables because we can't compare them against what's in ENV.
-      # Path, pathext, psmodulepath are special, they ares "merged" between the user and system value.
+      # Path, pathext, psmodulepath are special, they are "merged" between the user and system value.
       # PROCESSOR_ARCHITECTURE is actually the real processor arch of the system, so #{ENV['processor_architecture']} will
       # report X86, while WMI will (correctly) report X64.
       # And username is oddly the username of the WMI service, i.e. 'SYSTEM'.
+      #
+      # Update 3/31/2022
+      # There is no so much variability in the environment variables that we moved from sampling all of them to a select few
+
+
       ignore = { "path" => true, "pathext" => true, "processor_architecture" => true, "psmodulepath" => true, "username" => true }
       results.each do |result|
         if ! variables.key?(result["name"]) || result["username"] != "<SYSTEM>"
@@ -126,22 +131,14 @@ describe WmiLite::Wmi, :windows_only do
         end
       end
 
-      verified_count = 0
-      variables.each_pair do |name, value|
-        if ignore[name.downcase] != true
+      processor_count_from_wmi = variables["NUMBER_OF_PROCESSORS"]
+      processor_count_from_ruby = `echo #{ENV["NUMBER_OF_PROCESSORS"]}`.strip
+      expect(processor_count_from_wmi).to eql(processor_count_from_ruby)
 
-          # Turn %SYSTEMROOT% into c:\windows
-          # so we can compare with what's in ENV
-          evaluated_value = `echo #{value}`.strip
 
-          expect(evaluated_value).to eql(`echo #{ENV[name]}`.strip)
-          verified_count += 1
-        end
-      end
-
-      # There are at least 3 variables we could verify in a default
-      # Windows configuration, make sure we saw some
-      expect(verified_count).to be >= 3
+      operating_system_from_wmi = variables["OS"]
+      operating_system_from_ruby = `echo #{ENV["OS"]}`.strip
+      expect(/#{operating_system_from_wmi}/).to eql(/#{operating_system_from_ruby}/)
     end
   end
 
