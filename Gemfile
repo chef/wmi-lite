@@ -9,7 +9,6 @@ group :docs do
 end
 
 group :test do
-  # gem "chefstyle", "= 1.2.0"
   gem "chefstyle"
   gem "rspec", "~> 3.1"
   gem "docile"
