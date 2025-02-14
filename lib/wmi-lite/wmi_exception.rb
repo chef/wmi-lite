@@ -40,9 +40,7 @@ module WmiLite
       # Parse the error to get the error status code
       error_code_match = error_message.match(/[^\:]+\:\s*([0-9A-Fa-f]{1,8}).*/)
       error_code = error_code_match.captures.first if error_code_match
-      rubocop:disable
-      error_code ? error_code : ""
-      rubocop:enable
+      error_code || ""
     end
 
     def translate_wmi_connect_error_message(native_message, error_code, namespace)
