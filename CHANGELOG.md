@@ -1,8 +1,16 @@
 # WMI-Lite  Change Log
 
+<!-- latest_release 1.0.8 -->
+## [v1.0.8](https://github.com/chef/wmi-lite/tree/v1.0.8) (2025-02-14)
+
+#### Merged Pull Requests
+- Updating gem support [#21](https://github.com/chef/wmi-lite/pull/21) ([johnmccrae](https://github.com/johnmccrae))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=1.0.7 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Updating gem support [#21](https://github.com/chef/wmi-lite/pull/21) ([johnmccrae](https://github.com/johnmccrae)) <!-- 1.0.8 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
