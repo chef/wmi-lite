@@ -9,9 +9,9 @@ group :docs do
 end
 
 group :test do
-  gem "chefstyle", "= 1.2.0"
-  gem "rspec", "~> 3.1"
-  gem "docile", "~> 1.3.5" # pin until we drop ruby support 2.4
+  gem "chefstyle", "= 2.2.3"
+  gem "rspec", "~> 3.13"
+  gem "docile", "~> 1.4.1" # pin until we drop ruby support 2.4
   gem "rake"
 end
 
@@ -19,5 +19,5 @@ group :debug do
   gem "pry"
   gem "pry-byebug"
   gem "rb-readline"
-  gem "simplecov", "~> 0.18.5" # pin until we drop ruby support 2.4
+  gem "simplecov", "~> 0.22.0" # pin until we drop ruby support 2.4
 end
