@@ -19,4 +19,8 @@ Gem::Specification.new do |spec|
 
   spec.files         = %w{LICENSE} + Dir.glob("lib/**/*")
   spec.require_paths = ["lib"]
+
+  spec.required_ruby_version = "~> 3.1" # rubocop:disable Style/GuardClause
+
+  spec.add_development_dependency "cookstyle", "~> 8.1"
 end
