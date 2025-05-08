@@ -50,13 +50,9 @@ module WmiLite
     def query_with_context(wql_query, diagnostic_class_name = nil)
       results = start_query(wql_query, diagnostic_class_name)
 
-      result_set = []
-
-      results.each do |result|
-        result_set.push(wmi_result_to_snapshot(result))
+      result_set = results.map do |result|
+        wmi_result_to_snapshot(result)
       end
-
-      result_set
     end
 
     def start_query(wql_query, diagnostic_class_name = nil)

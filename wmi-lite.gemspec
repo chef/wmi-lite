@@ -9,14 +9,18 @@ Gem::Specification.new do |spec|
   spec.email         = ["dev@chef.io"]
   spec.description   = "A lightweight utility over win32ole for accessing basic " \
                        "WMI (Windows Management Instrumentation) functionality " \
-                       "in the Microsoft Windows operating system. It has no "  \
+                       "in the Microsoft Windows operating system. It has no " \
                        "runtime dependencies other than Ruby, so it can be used " \
                        "without concerns around dependency issues."
-  spec.summary       = "A lightweight utility library for accessing basic WMI "     \
+  spec.summary       = "A lightweight utility library for accessing basic WMI " \
                        "(Windows Management Instrumentation) functionality on Windows"
   spec.homepage      = "https://github.com/chef/wmi-lite"
   spec.license       = "Apache-2.0"
 
   spec.files         = %w{LICENSE} + Dir.glob("lib/**/*")
   spec.require_paths = ["lib"]
+
+  spec.required_ruby_version = "~> 3.1" # rubocop:disable Style/GuardClause
+
+  spec.add_development_dependency "cookstyle", "~> 8.1"
 end

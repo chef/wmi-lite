@@ -9,7 +9,6 @@ group :docs do
 end
 
 group :test do
-  gem "chefstyle", "= 2.2.3"
   gem "rspec", "~> 3.13"
   gem "docile", "~> 1.4.1" # pin until we drop ruby support 2.4
   gem "rake"
