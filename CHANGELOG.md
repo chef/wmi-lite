@@ -1,15 +1,16 @@
 # WMI-Lite  Change Log
 
-<!-- latest_release 2.0.0 -->
-## [v2.0.0](https://github.com/chef/wmi-lite/tree/v2.0.0) (2025-05-08)
+<!-- latest_release 2.0.1 -->
+## [v2.0.1](https://github.com/chef/wmi-lite/tree/v2.0.1) (2025-11-14)
 
 #### Merged Pull Requests
-- Updating Ruby support and Cookstyle [#22](https://github.com/chef/wmi-lite/pull/22) ([johnmccrae](https://github.com/johnmccrae))
+- set up ai assisted development workflow [#28](https://github.com/chef/wmi-lite/pull/28) ([rishichawda](https://github.com/rishichawda))
 <!-- latest_release -->
 <!-- release_rollup since=1.0.7 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- set up ai assisted development workflow [#28](https://github.com/chef/wmi-lite/pull/28) ([rishichawda](https://github.com/rishichawda)) <!-- 2.0.1 -->
 - Updating Ruby support and Cookstyle [#22](https://github.com/chef/wmi-lite/pull/22) ([johnmccrae](https://github.com/johnmccrae)) <!-- 2.0.0 -->
 - Updating gem support [#21](https://github.com/chef/wmi-lite/pull/21) ([johnmccrae](https://github.com/johnmccrae)) <!-- 1.0.8 -->
 <!-- release_rollup -->
